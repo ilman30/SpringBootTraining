@@ -210,6 +210,26 @@ public class BerandaAction {
         return ResponseEntity.ok().body(koneksiJdbc.getProvinsi());
     }
     
+    @GetMapping(path= "/api/listprovinsijson/{id}")
+    public ResponseEntity<Provinsi> listProvinsiByIdJson(@PathVariable("id") int id ){
+        Optional<Provinsi> hasil = koneksiJdbc.getProvinsiById(id);
+        if(hasil.isPresent()){
+            return ResponseEntity.ok().body(hasil.get());
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
+    @GetMapping(path= "/api/listkabjson/{id}")
+    public ResponseEntity<Kabupaten> listKabupatenByIdJson(@PathVariable("id") int id ){
+        Optional<Kabupaten> hasil = koneksiJdbc.getKabupatenById(id);
+        if(hasil.isPresent()){
+            return ResponseEntity.ok().body(hasil.get());
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
     @GetMapping(path= "/api/listkabjson")
     public ResponseEntity<List<Kabupaten>> listKabupatenCariJson(){
         return ResponseEntity.ok().body(koneksiJdbc.getKabupaten());
