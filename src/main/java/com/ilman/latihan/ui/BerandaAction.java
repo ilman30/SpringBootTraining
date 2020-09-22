@@ -14,18 +14,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
+import static jdk.nashorn.internal.runtime.Debug.id;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 /**
  *
@@ -113,6 +119,22 @@ public class BerandaAction {
         return "redirect:listprovinsi";
     }
     
+    @PostMapping("/api/saveprovjson")
+    public ResponseEntity <Map<String,Object>> saveprovjson(@RequestBody Provinsi provinsi){
+        Map<String, Object> status = new HashMap<>();
+        koneksiJdbc.insertProvinsi(provinsi);
+        status.put("pesan", "Simpan Berhasil");
+        return ResponseEntity.ok().body(status);
+    }
+    
+    @PostMapping("/api/savekabjson")
+    public ResponseEntity <Map<String,Object>> savekabjson(@RequestBody Kabupaten kabupaten){
+        Map<String, Object> status = new HashMap<>();
+        koneksiJdbc.insertKabupaten(kabupaten);
+        status.put("pesan", "Simpan Berhasil");
+        return ResponseEntity.ok().body(status);
+    }
+    
     @PostMapping("/updateprov")
     public String updateprov(@Valid @ModelAttribute Provinsi provinsi, BindingResult result){
         if(result.hasErrors()){
@@ -120,6 +142,35 @@ public class BerandaAction {
         }
         koneksiJdbc.updateProvinsi(provinsi);
         return "redirect:listprovinsi";
+    }
+    
+//    @DeleteMapping(path = "/deleteprov/{id}")
+//    public ResponseEntity<?> deleteProvinsi(@PathVariable("id") Integer id){
+//        try {
+//            koneksiJdbc.deleteProvinsi(id);
+//            return new ResponseEntity<>(null, HttpStatus.OK);
+//        } catch (DataAccessException e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//        }
+//    }
+    
+//    @PostMapping("/deleteprov")
+//    public String deleteprov(@Valid @ModelAttribute Provinsi provinsi, BindingResult result){
+//        if(result.hasErrors()){
+//            return "listprovinsi";
+//        }
+//        koneksiJdbc.deleteProvinsi(provinsi);
+//        return "redirect:listprovinsi";
+//    }
+    
+    @GetMapping(path = "/deleteprov/{id}")
+    public String deleteProvinsi(@PathVariable("id") Integer id, Model model ){
+//        Map<String, Provinsi> map = new HashMap();
+//        map.put("prop", koneksiJdbc.getProvinsiById(id).get());
+//        return new ModelAndView("provinsidetail", map);
+        model.addAttribute("provinsi", koneksiJdbc.getProvinsiById(id).get());
+        return "listprovinsi";
     }
     
   
@@ -152,6 +203,16 @@ public class BerandaAction {
     @GetMapping(path= "/listprovinsijson")
     public ResponseEntity<List<Provinsi>> listProvinsiCari(){
         return ResponseEntity.ok().body(koneksiJdbc.getProvinsi());
+    }
+    
+    @GetMapping(path= "/api/listprovinsijson")
+    public ResponseEntity<List<Provinsi>> listProvinsiCariJson(){
+        return ResponseEntity.ok().body(koneksiJdbc.getProvinsi());
+    }
+    
+    @GetMapping(path= "/api/listkabjson")
+    public ResponseEntity<List<Kabupaten>> listKabupatenCariJson(){
+        return ResponseEntity.ok().body(koneksiJdbc.getKabupaten());
     }
     
 //    @GetMapping(path= "/listkabjson")

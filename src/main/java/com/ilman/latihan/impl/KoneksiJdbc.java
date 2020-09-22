@@ -88,11 +88,11 @@ public class KoneksiJdbc {
             jdbcTemplate.update(sql, param);
         }
         
-//        public void deleteProvinsi(Provinsi provinsi){
-//            String sql = "delete from provinsi where kodeBPS=?";
-//            Object param[] = {provinsi.getNamaProvinsi(),provinsi.getIdProvinsi()};
-//            jdbcTemplate.update(sql, param);
-//        }
+        public void deleteProvinsi(Provinsi provinsi){
+            String sql = "delete from provinsi where kodeBPS=?";
+            Object param[] = {provinsi.getIdProvinsi()};
+            jdbcTemplate.update(sql, param);
+        }
         
         //Untuk Kabupaten
         

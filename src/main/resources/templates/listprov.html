@@ -24,7 +24,7 @@ and open the template in the editor.
                                         <tr>
                                             <th>ID</th>  
                                             <th>Nama</th>  
-                                            <th>#</th>  
+                                            <th colspan="2">#</th>  
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -32,6 +32,7 @@ and open the template in the editor.
                                             <td th:text="${pr.idProvinsi}"></td>
                                             <td th:text="${pr.namaProvinsi}"></td>
                                             <td><a th:href="@{|/provinsidetail/${pr.idProvinsi}|}">Edit</a></td>
+                                            <td><a th:href="@{|/deleteprov/${pr.idProvinsi}|}">Delete</a></td>
                                         </tr>   
                                     </tbody>
                                 </table>
