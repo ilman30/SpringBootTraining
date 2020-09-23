@@ -94,6 +94,17 @@ public class KoneksiJdbc {
             jdbcTemplate.update(sql, param);
         }
         
+        public void insertOrUpdateProvinsi (Provinsi provinsi){
+            Optional<Provinsi> data= getProvinsiById(provinsi.getIdProvinsi());
+            if(data.isPresent()){
+                updateProvinsi(provinsi);
+            }else{
+                insertProvinsi(provinsi);
+            }
+        }
+        
+        
+        
         //Untuk Kabupaten
         
         public List<Kabupaten> getKabupaten(){
@@ -187,6 +198,16 @@ public class KoneksiJdbc {
             jdbcTemplate.update(sql, param);
         }
         
+        public void insertOrUpdateKabupaten (Kabupaten kabupaten){
+            Optional<Kabupaten> data= getKabupatenById(kabupaten.getIdKabupaten());
+            if(data.isPresent()){
+                updateKabupaten(kabupaten);
+            }else{
+                insertKabupaten(kabupaten);
+            }
+        }
+        
+        
         //Untuk Kecamatan
         
         public List<Kecamatan> getKecamatan(){
@@ -230,7 +251,7 @@ public class KoneksiJdbc {
         }
         
         public Optional<Kecamatan> getKecamatanById(int id){
-            String SQL = "SELECT namaKecamatan, kodeBPS as idKecamatan, kodeKabupaten FROM kecamatan where kodeBPS = ? ";
+            String SQL = "SELECT k.kodeBPS as idKecamatan, k.namaKecamatan, k.kodeKabupaten, kb.kodeProvinsi as kodeProvinsi from kecamatan k join kabupaten kb on k.kodeKabupaten = kb.kodeBPS WHERE k.kodeBPS = ?";
             Object param[] = {id};
             try{
                 return Optional.of( jdbcTemplate.queryForObject(SQL, param, BeanPropertyRowMapper.newInstance(Kecamatan.class)));
@@ -251,5 +272,15 @@ public class KoneksiJdbc {
             Object param[] = {kecamatan.getNamaKecamatan(),kecamatan.getKodeKabupaten(),kecamatan.getIdKecamatan()};
             jdbcTemplate.update(sql, param);
         }
+        
+        public void insertOrUpdateKecamatan (Kecamatan kecamatan){
+            Optional<Kecamatan> data= getKecamatanById(kecamatan.getIdKecamatan());
+            if(data.isPresent()){
+                updateKecamatan(kecamatan);
+            }else{
+                insertKecamatan(kecamatan);
+            }
+        }
+        
     
 }

@@ -122,7 +122,7 @@ public class BerandaAction {
     @PostMapping("/api/saveprovjson")
     public ResponseEntity <Map<String,Object>> saveprovjson(@RequestBody Provinsi provinsi){
         Map<String, Object> status = new HashMap<>();
-        koneksiJdbc.insertProvinsi(provinsi);
+        koneksiJdbc.insertOrUpdateProvinsi(provinsi);
         status.put("pesan", "Simpan Berhasil");
         return ResponseEntity.ok().body(status);
     }
@@ -130,7 +130,15 @@ public class BerandaAction {
     @PostMapping("/api/savekabjson")
     public ResponseEntity <Map<String,Object>> savekabjson(@RequestBody Kabupaten kabupaten){
         Map<String, Object> status = new HashMap<>();
-        koneksiJdbc.insertKabupaten(kabupaten);
+        koneksiJdbc.insertOrUpdateKabupaten(kabupaten);
+        status.put("pesan", "Simpan Berhasil");
+        return ResponseEntity.ok().body(status);
+    }
+    
+    @PostMapping("/api/savekecjson")
+    public ResponseEntity <Map<String,Object>> savekabjson(@RequestBody Kecamatan kecamatan){
+        Map<String, Object> status = new HashMap<>();
+        koneksiJdbc.insertOrUpdateKecamatan(kecamatan);
         status.put("pesan", "Simpan Berhasil");
         return ResponseEntity.ok().body(status);
     }
@@ -235,6 +243,21 @@ public class BerandaAction {
         return ResponseEntity.ok().body(koneksiJdbc.getKabupaten());
     }
     
+    @GetMapping(path= "/api/listkecjson/{id}")
+    public ResponseEntity<Kecamatan> listKecamatanByIdJson(@PathVariable("id") int id ){
+        Optional<Kecamatan> hasil = koneksiJdbc.getKecamatanById(id);
+        if(hasil.isPresent()){
+            return ResponseEntity.ok().body(hasil.get());
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
+    @GetMapping(path= "/api/listkecjson")
+    public ResponseEntity<List<Kecamatan>> listKecamatanCariJson(){
+        return ResponseEntity.ok().body(koneksiJdbc.getKecamatan());
+    }
+    
 //    @GetMapping(path= "/listkabjson")
 //    public ResponseEntity<List<Kabupaten>> listKabupatenCari(){
 //        return ResponseEntity.ok().body(koneksiJdbc.getKabupaten());
@@ -242,6 +265,11 @@ public class BerandaAction {
     
     @GetMapping(path= "/listkabjson/{id}")
     public ResponseEntity<List<Kabupaten>> listKabupatenCari(@PathVariable("id") Integer id){
+        return ResponseEntity.ok().body(koneksiJdbc.getListKabupaten(id));
+    }
+    
+    @GetMapping(path= "/api/listkabjson2/{id}")
+    public ResponseEntity<List<Kabupaten>> listKabupatenCari2(@PathVariable("id") Integer id){
         return ResponseEntity.ok().body(koneksiJdbc.getListKabupaten(id));
     }
     
